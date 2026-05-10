@@ -1,8 +1,8 @@
-import { IsString, IsNotEmpty, IsOptional, IsNumber, Min, Max } from 'class-validator';
+import { IsString, IsNotEmpty, IsOptional, MinLength, MaxLength } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 
 export class CreateAgentDto {
-  @ApiProperty({ example: 'GABC...', description: 'Agent wallet address' })
+  @ApiProperty({ example: 'GABC123...', description: 'Stellar wallet address' })
   @IsString()
   @IsNotEmpty()
   address: string;
@@ -10,6 +10,8 @@ export class CreateAgentDto {
   @ApiProperty({ example: 'Trading Bot', description: 'Agent name' })
   @IsString()
   @IsNotEmpty()
+  @MinLength(3)
+  @MaxLength(50)
   name: string;
 
   @ApiProperty({ required: false, description: 'Metadata URI' })
@@ -20,44 +22,58 @@ export class CreateAgentDto {
 
 export class DepositDto {
   @ApiProperty({ example: 1, description: 'Agent ID' })
-  @IsNumber()
-  @Min(1)
+  @IsNotEmpty()
   agentId: number;
 
-  @ApiProperty({ example: 'GABC...', description: 'Token address' })
+  @ApiProperty({ example: 'GABC123...', description: 'Token address' })
   @IsString()
   @IsNotEmpty()
   tokenAddress: string;
 
   @ApiProperty({ example: 1000000, description: 'Amount to deposit' })
-  @IsNumber()
-  @Min(1)
+  @IsNotEmpty()
   amount: number;
 }
 
 export class PaymentDto {
   @ApiProperty({ example: 1, description: 'Agent ID' })
-  @IsNumber()
-  @Min(1)
+  @IsNotEmpty()
   agentId: number;
 
-  @ApiProperty({ example: 'GXYZ...', description: 'Recipient address' })
+  @ApiProperty({ example: 'GXYZ789...', description: 'Recipient address' })
   @IsString()
   @IsNotEmpty()
   toAddress: string;
 
-  @ApiProperty({ example: 'GABC...', description: 'Token address' })
+  @ApiProperty({ example: 'GABC123...', description: 'Token address' })
   @IsString()
   @IsNotEmpty()
   tokenAddress: string;
 
   @ApiProperty({ example: 100000, description: 'Payment amount' })
-  @IsNumber()
-  @Min(1)
+  @IsNotEmpty()
   amount: number;
 
   @ApiProperty({ required: false, description: 'Payment memo' })
   @IsString()
   @IsOptional()
   memo?: string;
+}
+
+export class UpdateLimitsDto {
+  @ApiProperty({ required: false, description: 'Max per transaction' })
+  @IsOptional()
+  maxPerTransaction?: number;
+
+  @ApiProperty({ required: false, description: 'Daily limit' })
+  @IsOptional()
+  dailyLimit?: number;
+
+  @ApiProperty({ required: false, description: 'Weekly limit' })
+  @IsOptional()
+  weeklyLimit?: number;
+
+  @ApiProperty({ required: false, description: 'Monthly limit' })
+  @IsOptional()
+  monthlyLimit?: number;
 }
